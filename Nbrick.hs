@@ -3,26 +3,24 @@ module Nbrick where
 import qualified Data.Map.Strict as Map
 import Dont
 
-page titleText content =
-  html
-    [ metadata [ title titleText ]
-    , body
-        ([ h1 [ text titleText ] ] ++ content)
-    ]
+data BlogPost = BlogPost
+  { bPostTitle   :: String
+  , bPostDate    :: String
+  , bPostContent :: [Node]
+  }
 
-pages = Map.fromList -- Static things.
-  [ ( "about", page "about me"
-        [ p [ text "stuff about me" ]
-        ] )
-  , ( "what-i-understand", page "things (I think) I understand"
-        [ h2 [ text "things I understand" ]
-        , ul [ li [ text "undergraduate-level physics" ]
-             , li [ text "Python" ]
-             , li [ text "moderately simple C programming" ]
-             , li [ text "some bits of quantum computing" ]
-             ]
-        ] )
-  , ( "another-page", page "another page!"
-        [ p [ text "this is some more text..." ]
-        ] )
+renderBlog :: [(String, String)] -> Maybe [Node]
+renderBlog [("post", slug)] =
+  let post = Map.lookup slug blogPosts
+    in case post of
+      (Just p) -> Just $ [ h1 [ text $ bPostTitle p ] ] ++ bPostContent p
+      Nothing  -> Nothing
+renderBlog _ = Nothing
+
+blogPosts = Map.fromList
+  [ ( "my-first-blog-post",
+      BlogPost "My first blog post" "2016-04-02"
+        [ p [ text "some content" ]
+        ]
+    )
   ]

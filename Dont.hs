@@ -23,8 +23,7 @@ body = E "body" []
 p = E "p" []
 h1 = E "h1" []
 h2 = E "h2" []
-ul = E "ul" []
-li = E "li" []
+ul elements = E "ul" [] $ map (E "li" [])  elements
 
 -- Sugar
 text = T
