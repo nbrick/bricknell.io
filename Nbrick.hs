@@ -10,6 +10,12 @@ data BlogPost = BlogPost
   }
 
 renderBlog :: [(String, String)] -> Maybe [Node]
+renderBlog [] = -- Index.
+  Just [ h1 [ text "some posts for you" ]
+       , ul $ map -- TODO: Sort by date.
+                (\slug -> [ link ("blog?post=" ++ slug) slug ])
+                (Map.keys blogPosts)
+       ]
 renderBlog [("post", slug)] =
   let post = Map.lookup slug blogPosts
     in case post of
