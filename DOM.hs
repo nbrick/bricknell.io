@@ -14,10 +14,11 @@ instance Show Node where
       ++ mconcat (map show nodes)
       ++ "</" ++ tag ++ ">"
 
--- TODO: HtmlNode/RootNode, show with doctype.
+data Document = Document [Node]
+instance Show Document where
+  show (Document nodes) = "<!doctype html>\n" ++ (show $ E "html" [] nodes)
 
 -- Containers
-html = E "html" []
 metadata = E "head" []
 body = E "body" []
 p = E "p" []

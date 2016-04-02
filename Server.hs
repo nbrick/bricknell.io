@@ -2,7 +2,7 @@ module Server where
 
 import Network.HTTP.Server
 import Network.URL
-import DOM (html) -- TODO: Remove this dependency.
+import DOM (Document (Document)) -- TODO: Remove this dependency.
 
 standardHeaders msg msgType =
   [ Header HdrContentLength (show $ length msg)
@@ -25,6 +25,5 @@ responseWith Nothing =
                 }
 
 handleWith route addr url req =
-  return $ responseWith $ fmap wrap $ (route (url_path url)) (url_params url)
-
-wrap content = "<!doctype html>\n" ++ (show $ html content)
+  return $ responseWith
+         $ fmap show $ fmap Document $ (route (url_path url)) (url_params url)
