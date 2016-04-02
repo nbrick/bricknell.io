@@ -1,5 +1,4 @@
-import qualified Data.Map.Strict as Map
-import System.Environment
+import System.Environment (getArgs)
 import Network.HTTP.Server
 import Network.URL
 import Dont (html)
