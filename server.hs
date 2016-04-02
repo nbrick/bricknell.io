@@ -2,7 +2,7 @@ import qualified Data.Map.Strict as Map
 import Network.HTTP.Server
 import Network.URL
 import Dont (html)
-import Nbrick (renderBlog)
+import Nbrick (renderBlog, renderIndex)
 
 standardHeaders msg msgType =
   [ Header HdrContentLength (show $ length msg)
@@ -25,10 +25,11 @@ responseWith Nothing =
                 }
 
 handle addr url req = return
-  $ responseWith $ fmap wrap $ (dispatch (url_path url)) (url_params url)
+  $ responseWith $ fmap wrap $ (route (url_path url)) (url_params url)
 
-dispatch "blog" = renderBlog
-dispatch _ = (\_ -> Nothing)
+route "" = renderIndex
+route "blog" = renderBlog
+route _ = (\_ -> Nothing)
 
 wrap content = "<!doctype html>\n" ++ (show $ html content)
 

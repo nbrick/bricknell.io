@@ -3,6 +3,12 @@ module Nbrick where
 import qualified Data.Map.Strict as Map
 import Dont
 
+renderIndex [] =
+  Just [ h1 [ text "welcome" ]
+       , p [ text "see ", link "blog" "a blog" ]
+       ]
+renderIndex _ = Nothing
+
 data BlogPost = BlogPost
   { bPostTitle   :: String
   , bPostDate    :: String
