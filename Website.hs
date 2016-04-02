@@ -3,7 +3,7 @@ module Website where
 import qualified Data.Map.Strict as Map
 import DOM
 
-route ""     params = Document <$> renderIndex params
+route ""     []     = Just $ Document index
 route "blog" params = Document <$> renderBlog params
 route _      _      = Nothing
 
@@ -11,12 +11,10 @@ nav = ul [ [ link "/" "bricknell.io" ]
          , [ link "/blog" "blog" ]
          ]
 
-renderIndex [] =
-  Just [ nav
-       , h1 [ text "welcome" ]
-       , p [ text "see ", link "blog" "a blog" ]
-       ]
-renderIndex _ = Nothing
+index = [ nav
+        , h1 [ text "welcome" ]
+        , p [ text "see ", link "blog" "a blog" ]
+        ]
 
 data BlogPost = BlogPost
   { bPostTitle   :: String
