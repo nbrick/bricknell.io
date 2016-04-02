@@ -1,4 +1,5 @@
 import qualified Data.Map.Strict as Map
+import System.Environment
 import Network.HTTP.Server
 import Network.URL
 import Dont (html)
@@ -29,4 +30,7 @@ handle addr url req = return
 
 wrap content = "<!doctype html>\n" ++ (show $ html content)
 
-main = server handle
+main = do
+  args <- getArgs
+  let port = fromIntegral (read $ head args)
+  serverWith defaultConfig { srvPort = port } handle
