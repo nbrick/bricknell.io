@@ -24,10 +24,9 @@ renderBlog [] = -- Index.
                 (Map.assocs blogPosts)
        ]
 renderBlog [("post", slug)] =
-  let post = Map.lookup slug blogPosts
-    in case post of
-      (Just p) -> Just $ [ h1 [ text $ bPostTitle p ] ] ++ bPostContent p
-      Nothing  -> Nothing
+  fmap
+    (\p -> [ h1 [ text $ bPostTitle p ] ] ++ bPostContent p)
+    (Map.lookup slug blogPosts)
 renderBlog _ = Nothing
 
 blogPosts = Map.fromList
