@@ -14,7 +14,7 @@ renderBlog [] = -- Index.
   Just [ h1 [ text "some posts for you" ]
        , ul $ map -- TODO: Sort by date.
                 (\(slug, post)
-                   -> [ link ("blog?post=" ++ slug) (bPostTitle post) ])
+                   -> [ link ("?post=" ++ slug) (bPostTitle post) ])
                 (Map.assocs blogPosts)
        ]
 renderBlog [("post", slug)] =
