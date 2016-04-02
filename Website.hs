@@ -3,9 +3,9 @@ module Website where
 import qualified Data.Map.Strict as Map
 import DOM
 
-route "" = renderIndex
-route "blog" = renderBlog
-route _ = (\_ -> Nothing)
+route ""     params = Document <$> renderIndex params
+route "blog" params = Document <$> renderBlog params
+route _      _      = Nothing
 
 nav = ul [ [ link "/" "bricknell.io" ]
          , [ link "/blog" "blog" ]
