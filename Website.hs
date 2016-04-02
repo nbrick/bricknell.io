@@ -1,7 +1,7 @@
-module Nbrick where
+module Website where
 
 import qualified Data.Map.Strict as Map
-import Dont
+import DOM
 
 route "" = renderIndex
 route "blog" = renderBlog

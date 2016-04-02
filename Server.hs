@@ -1,8 +1,8 @@
-import System.Environment (getArgs)
+module Server where
+
 import Network.HTTP.Server
 import Network.URL
-import Dont (html)
-import Nbrick (route)
+import DOM (html) -- TODO: Remove this dependency.
 
 standardHeaders msg msgType =
   [ Header HdrContentLength (show $ length msg)
@@ -24,12 +24,7 @@ responseWith Nothing =
                 , rspReason = "No content for that query!"
                 }
 
-handle addr url req = return
-  $ responseWith $ fmap wrap $ (route (url_path url)) (url_params url)
+handleWith route addr url req =
+  return $ responseWith $ fmap wrap $ (route (url_path url)) (url_params url)
 
 wrap content = "<!doctype html>\n" ++ (show $ html content)
-
-main = do
-  args <- getArgs
-  let port = fromIntegral (read $ head args)
-  serverWith defaultConfig { srvPort = port } handle

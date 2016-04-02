@@ -1,4 +1,4 @@
-module Dont where
+module DOM where
 
 data Node
   = T String
