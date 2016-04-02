@@ -25,16 +25,11 @@ responseWith Nothing =
                 }
 
 handle addr url req = return
-  $ responseWith $ wrap
-  $ case renderer of
-        (Just render) -> render (url_params url)
-        Nothing       -> Nothing
-      where renderer = dispatch (url_path url)
+  $ responseWith $ fmap wrap $ (dispatch (url_path url)) (url_params url)
 
-dispatch "blog" = Just renderBlog
-dispatch _      = Nothing
+dispatch "blog" = renderBlog
+dispatch _ = (\_ -> Nothing)
 
-wrap (Just content) = Just $ "<!doctype html>\n" ++ (show $ html content)
-wrap Nothing        = Nothing
+wrap content = "<!doctype html>\n" ++ (show $ html content)
 
 main = server handle
