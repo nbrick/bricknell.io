@@ -40,6 +40,9 @@ posts = Map.fromList
   [ ( "my-first-blog-post",
       Post "My first blog post" "2016-04-02" -- TODO: Proper datetime.
         [ p [ text "some content" ]
+        , p [ text "this is going to be some really long content, which, insid\
+                   \e the source code, will be split onto multiple lines, but,\
+                   \ in the browser, won't be." ]
         ]
     )
   , ( "another-post",
