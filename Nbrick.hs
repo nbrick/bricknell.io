@@ -3,8 +3,17 @@ module Nbrick where
 import qualified Data.Map.Strict as Map
 import Dont
 
+route "" = renderIndex
+route "blog" = renderBlog
+route _ = (\_ -> Nothing)
+
+nav = ul [ [ link "/" "bricknell.io" ]
+         , [ link "/blog" "blog" ]
+         ]
+
 renderIndex [] =
-  Just [ h1 [ text "welcome" ]
+  Just [ nav
+       , h1 [ text "welcome" ]
        , p [ text "see ", link "blog" "a blog" ]
        ]
 renderIndex _ = Nothing
@@ -17,7 +26,8 @@ data BlogPost = BlogPost
 
 renderBlog :: [(String, String)] -> Maybe [Node]
 renderBlog [] = -- Index.
-  Just [ h1 [ text "some posts for you" ]
+  Just [ nav
+       , h1 [ text "some posts for you" ]
        , ul $ map -- TODO: Sort by date.
                 (\(slug, post)
                    -> [ link ("?post=" ++ slug) (bPostTitle post) ])
@@ -25,7 +35,7 @@ renderBlog [] = -- Index.
        ]
 renderBlog [("post", slug)] =
   fmap
-    (\p -> [ h1 [ text $ bPostTitle p ] ] ++ bPostContent p)
+    (\p -> [ nav, h1 [ text $ bPostTitle p ] ] ++ bPostContent p)
     (Map.lookup slug blogPosts)
 renderBlog _ = Nothing
 
