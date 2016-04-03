@@ -2,7 +2,7 @@ module DOM where
 
 data Node
   = T String
-  | E String [(String, String)] [Node]
+  | E String [(String, String)] [Node] -- TODO: Maybe [Node].
 
 instance Show Node where
   show (T string) = string
@@ -24,7 +24,9 @@ body = E "body" []
 p = E "p" []
 h1 = E "h1" []
 h2 = E "h2" []
-ul elements = E "ul" [] $ map (E "li" [])  elements
+ulWith attrs elements = E "ul" attrs $ map (E "li" []) elements
+ulWithId id elements = ulWith [("id", id)] elements
+ul elements = ulWith [] elements
 
 -- Sugar
 text = T
@@ -33,3 +35,8 @@ blank = T ""
 -- Sugary elements
 title t = E "title" [] [ text t ]
 link href t = E "a" [("href", href)] [ text t ]
+
+-- Meta things
+refStylesheet filename = E "link" [ ("href", filename)
+                                  , ("rel", "stylesheet")
+                                  ] []

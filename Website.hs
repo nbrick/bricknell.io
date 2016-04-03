@@ -4,17 +4,23 @@ import qualified Data.Map.Strict as Map
 import ContentType
 import DOM
 
-route ""     []               = Just $ Html $ Document index
-route "blog" []               = Just $ Html $ Document postIndex
-route "blog" [("post", slug)] = Html <$> Document <$> renderPost slug
-route _      _                = Nothing
+route ""          []               = Just $ Html $ Document $ wrap index
+route "blog"      []               = Just $ Html $ Document $ wrap postIndex
+route "blog"      [("post", slug)] = Html <$> Document
+                                          <$> wrap <$> renderPost slug
+route "style.css" []               = Just $ Stylesheet "style.css"
+route _           _                = Nothing
 
-nav = ul [ [ link "/" "bricknell.io" ]
-         , [ link "/blog" "blog" ]
-         ]
+wrap content = [ metadata [ refStylesheet "/style.css"
+                          ]
+               , body ([ ulWithId "site-navigation"
+                           [ [ link "/" "bricknell.io" ]
+                           , [ link "/blog" "blog" ]
+                           ]
+                       ] ++ content)
+               ]
 
-index = [ nav
-        , h1 [ text "welcome" ]
+index = [ h1 [ text "welcome" ]
         , p [ text "see ", link "blog" "a blog" ]
         ]
 
@@ -24,8 +30,7 @@ data Post = Post
   , postContent :: [Node]
   }
 
-postIndex = [ nav
-            , h1 [ text "some posts for you" ]
+postIndex = [ h1 [ text "some posts for you" ]
             , ul $ map -- TODO: Sort by date.
                      (\(slug, post)
                         -> [ link ("?post=" ++ slug) (postTitle post) ])
@@ -34,7 +39,7 @@ postIndex = [ nav
 
 renderPost slug =
   fmap
-    (\p -> [ nav, h1 [ text $ postTitle p ] ] ++ postContent p)
+    (\p -> [ h1 [ text $ postTitle p ] ] ++ postContent p)
     (Map.lookup slug posts)
 
 posts = Map.fromList
