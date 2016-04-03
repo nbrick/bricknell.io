@@ -24,4 +24,4 @@ responseWith Nothing =
                 }
 
 handleWith route addr url req =
-  return $ responseWith $ show <$> (route (url_path url)) (url_params url)
+  return $ responseWith $ show <$> route (url_path url) (url_params url)
