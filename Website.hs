@@ -1,11 +1,12 @@
 module Website where
 
 import qualified Data.Map.Strict as Map
+import ContentType
 import DOM
 
-route ""     []               = Just $ Document index
-route "blog" []               = Just $ Document postIndex
-route "blog" [("post", slug)] = Document <$> renderPost slug
+route ""     []               = Just $ Html $ Document index
+route "blog" []               = Just $ Html $ Document postIndex
+route "blog" [("post", slug)] = Html <$> Document <$> renderPost slug
 route _      _                = Nothing
 
 nav = ul [ [ link "/" "bricknell.io" ]
