@@ -61,12 +61,29 @@ renderPost slug =
     (Map.lookup slug posts)
 
 posts = Map.fromList
-  [ ( "my-first-blog-post",
-      Post "My first blog post" "2016-04-02" -- TODO: Proper datetime.
-        [ p [ text "some content" ]
-        , p [ text "this is going to be some really long content, which, insid\
-                   \e the source code, will be split onto multiple lines, but,\
-                   \ in the browser, won't be." ]
+  [ ( "nice-monospace-fonts",
+      Post "My favourite monospace fonts" "2016-04-02"
+      -- TODO: Proper datetime.
+        [ ul [ [ h2 [ link
+                   "http://adobe-fonts.github.io/source-code-pro/"
+                   "Source Code Pro" ]
+               , p [ text "Size 10 all the way." ]
+               ]
+             , [ h2 [ link
+                   "https://github.com/belluzj/fantasque-sans"
+                   "Fantasque Sans Mono" ]
+               , p [ text "A bit of fun, and never gets old." ]
+               ]
+             , [ h2 [ link "http://eastfarthing.com/luculent/" "Luculent" ]
+               , p [ text "If you want *really small*, Luculent is the answer.\
+                          \ See "
+                   , link
+                     "http://eastfarthing.com/luculent/sample4.png"
+                     "the pre-hinted 5x11 px version"
+                   , text "."
+                   ]
+               ]
+             ]
         ]
     )
   , ( "another-post",
