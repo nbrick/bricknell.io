@@ -21,12 +21,19 @@ instance Show Document where
 -- Containers
 metadata = E "head" []
 body = E "body" []
-p = E "p" []
+pWith attrs = E "p" attrs
+p = pWith []
 h1 = E "h1" []
 h2 = E "h2" []
-ulWith attrs elements = E "ul" attrs $ map (E "li" []) elements
+lWith tag attrs elements = E tag attrs $ map (E "li" []) elements
+ulWith = lWith "ul"
 ulWithId id elements = ulWith [("id", id)] elements
 ul elements = ulWith [] elements
+olWith = lWith "ol"
+ol elements = olWith [] elements
+spanWith = E "span"
+span = spanWith []
+
 
 -- Sugar
 text = T
@@ -35,6 +42,7 @@ blank = T ""
 -- Sugary elements
 title t = E "title" [] [ text t ]
 link href t = E "a" [("href", href)] [ text t ]
+noWrap t = spanWith [("style", "white-space: nowrap;")] [ text t ]
 
 -- Meta things
 refStylesheet filename = E "link" [ ("href", filename)
