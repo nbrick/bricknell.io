@@ -5,5 +5,7 @@ import Website (route)
 
 main = do
   args <- getArgs
-  let port = fromIntegral (read $ head args)
-  serverWith defaultConfig { srvPort = port } $ handleWith route
+  let (hostName : portString : _) = args
+  serverWith defaultConfig { srvPort = fromIntegral (read portString)
+                           , srvHost = hostName
+                           } $ handleWith route
