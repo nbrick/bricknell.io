@@ -1,3 +1,5 @@
+module Main (main) where
+
 import System.Environment (getArgs)
 import Network.HTTP.Server
 import Server (handleWith)
