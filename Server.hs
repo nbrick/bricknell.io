@@ -2,7 +2,9 @@ module Server where
 
 import Network.HTTP.Server
 import Network.URL
+import Network.URI
 import ContentType
+import DOM -- TODO: Remove.
 
 headers message contentType =
   [ Header HdrContentLength (show $ length message)
@@ -29,5 +31,11 @@ responseWith Nothing = do
                   , rspReason = "Not found."
                   }
 
-handleWith route addr url req =
-  responseWith $ route (url_path url) (url_params url)
+handleWith route thisHostName _ url req = -- Discard the originating address.
+  responseWith $ wrap req thisHostName $ route (url_path url) (url_params url)
+
+wrap req thisHostName route =
+  case uriRegName <$> (uriAuthority $ rqURI req) of
+    Just thisHostName -> route
+    _ -> Just $ Html
+              $ Document [text $ "Go to " ++ thisHostName ++ "."] -- TODO: 301.

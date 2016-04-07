@@ -8,4 +8,4 @@ main = do
   let (hostName : portString : _) = args
   serverWith defaultConfig { srvPort = fromIntegral (read portString)
                            , srvHost = hostName
-                           } $ handleWith route
+                           } $ handleWith route hostName
