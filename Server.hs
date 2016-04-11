@@ -3,6 +3,7 @@ module Server where
 import Network.HTTP.Server
 import Network.URL
 import Network.URI
+import Network.Socket.Internal (SockAddr)
 import ContentType
 import DOM -- TODO: Remove.
 
@@ -12,6 +13,7 @@ headers message contentType =
   , Header HdrContentEncoding contentType
   ]
 
+responseWith :: Maybe Content -> IO (Response String)
 responseWith (Just content) = do
   message <- display content
   return Response { rspCode = (2,0,0)
@@ -31,11 +33,26 @@ responseWith Nothing = do
                   , rspReason = "Not found."
                   }
 
-handleWith route thisHostName _ url req = -- Discard the originating address.
-  responseWith $ wrap req thisHostName $ route (url_path url) (url_params url)
+type Router = String -> [(String, String)] -> Maybe Content
 
-wrap req thisHostName route =
+-- TODO: Give the routing fn more info/just a URL?
+-- | Handle an HTTP request.
+handleWith :: Router               -- ^ Routing fn, which defines our website.
+           -> String               -- ^ Host name for this (local) machine.
+           -> SockAddr             -- ^ Originating address of the request.
+           -> URL                  -- ^ Requested address.
+           -> Request String       -- ^ The HTTP request.
+           -> IO (Response String) -- ^ Our response.
+handleWith route thisHostName _ url req = -- Discard the originating address.
+  responseWith $ enforceRequestedHostName req thisHostName
+               $ route (url_path url) (url_params url)
+
+-- | Perform a redirect if someone else's DNS is pointing at us.
+enforceRequestedHostName :: Request String -- ^ The HTTP request.
+                         -> String         -- ^ The hostname to enforce.
+                         -> (Maybe Content -> Maybe Content) -- ^ The gate fn.
+enforceRequestedHostName req thisHostName =
   case uriRegName <$> (uriAuthority $ rqURI req) of
-    Just thisHostName -> route
-    _ -> Just $ Html
-              $ Document [text $ "Go to " ++ thisHostName ++ "."] -- TODO: 301.
+    Just thisHostName -> id
+    _ -> (\_ -> Just $ Html -- TODO: 301.
+                     $ Document [text $ "Go to " ++ thisHostName ++ "."])
