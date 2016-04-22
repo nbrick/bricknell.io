@@ -129,4 +129,61 @@ posts =
               ]
             ]
         ]
+    , Post "epics-wat"
+        "What the hell is EPICS?!" "2015-10-22"
+        [ p [ text "The following is an attempt to distill a description of "
+            , link "http://www.aps.anl.gov/epics/" "EPICS"
+            , text " into a few paragraphs."
+            ]
+        , p [ text "EPICS is a framework for controlling hardware in a network\
+                   \ed environment. In practice, it has two main facets:"
+            ]
+        , ul [ [ p [ text "A communication protocol called Channel Access (CA)\
+                          \. CA lets you read and write named variables over a\
+                          \ network, without nameservers. Each variable publis\
+                          \hed by a CA server at A is read/writable by anyone \
+                          \at B using just the variable's name, with essential\
+                          \ly no configuration, so long as UDP packets can pro\
+                          \pagate between A and B. Conceptually (ignoring phys\
+                          \ical topology) a CA network is flat and many-to-man\
+                          \y. Anyone can be a server or client, or both. Varia\
+                          \ble names should be unique within a network." ]
+               ]
+             , [ p [ text "Software instances of a not-quite-real-time control\
+                          \ system, called EPICS Databases. \"Database\" belon\
+                          \gs in scare quotes, because an EPICS Database is le\
+                          \ss like a database and more like a bunch of little \
+                          \predefined C functions joined up by synchronous lin\
+                          \ks. An EPICS Database is typically designed to embo\
+                          \dy logic about what (and when) signals should be se\
+                          \nt to hardware, perhaps based on some inputs from h\
+                          \ardware. Typically each EPICS Database (plus its as\
+                          \sociated CA server, which serves up fields from the\
+                          \ database as variables) runs in a separate process \
+                          \on a Linux server. Each one is called an \"IOC\", w\
+                          \hich stands for input/output controller." ]
+               ]
+             ]
+        , p [ text "How do these fit together? Typically, a CA client writes t\
+                   \o a field of an EPICS Database in a far-away IOC, causing \
+                   \a chain of events within the database, resulting in hardwa\
+                   \re doing things. The same CA client probably reads databas\
+                   \e fields from the same IOC, to monitor the hardware activi\
+                   \ty."
+            ]
+        , p [ text "In addition, EPICS has an ecosystem of boilerplate wrapped\
+                   \s, database extensions, CA client applications (graphical \
+                   \or otherwise), CA libraries, hardware drivers and more. Co\
+                   \ntrol logic can be pushed up and out of the database level\
+                   \ to CA client level, down into the driver level, or sidewa\
+                   \ys into a database supervisor in the IOC. High-volume data\
+                   \ streams can bypass CA. Proprietary vendor software can be\
+                   \ wrapper with EPICS."
+            ]
+        , p [ text "Unfortunately, EPICS comes with a bizarre set of conventio\
+                   \ns about project layout and a horrible build system with t\
+                   \ens of lines of unreadable makefile boilerplate duplicated\
+                   \ in almost every \"module\". Otherwise, it's pretty nice."
+            ]
+        ]
     ]
