@@ -9,8 +9,7 @@ import DOM -- TODO: Remove.
 
 headers message contentType =
   [ Header HdrContentLength (show $ length message)
-  , Header HdrContentEncoding "UTF-8"
-  , Header HdrContentEncoding contentType
+  , Header HdrContentType $ contentType ++ "; charset=utf-8"
   ]
 
 responseWith :: Maybe Content -> IO (Response String)
